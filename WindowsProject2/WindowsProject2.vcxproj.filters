@@ -24,12 +24,12 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsProject2.h">
+    <ClInclude Include="Windows-Learning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WindowsProject2.cpp">
+    <ClCompile Include="Windows-Learning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
