@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Windows-Learning.h"
+#include "Helpers.h"
 
 #define MAX_LOADSTRING 100
 
@@ -145,20 +146,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
+            LPPAINTSTRUCT pps = &ps;
+
             POINT point;
             RECT rect;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
-           
-            GetClientRect(hWnd, &rect);
 
+            HDC hdc = BeginPaint(hWnd, pps);
+            // TODO: Add any drawing code that uses hdc here...
+            LPRECT ptr = &rect;
+            GetClientRect(hWnd, ptr);
+
+            point = getCenter(ptr);
+            
             MoveToEx(hdc, 0, 0, NULL);
             LineTo(hdc, rect.right, rect.bottom);
 
             MoveToEx(hdc, rect.right, 0, NULL);
             LineTo(hdc, 0, rect.bottom);
+            MoveToEx(hdc, point.x, point.y, NULL);
+            Arc(hdc, point.x - 100, point.y - 100, point.x + 100, point.y + 100, point.x, point.y, point.x, point.y);
 
-            EndPaint(hWnd, &ps);
+            EndPaint(hWnd, pps);
 
             INT height = rect.bottom - rect.top;
             INT width = rect.right - rect.left;
