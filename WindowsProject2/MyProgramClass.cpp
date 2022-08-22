@@ -1,6 +1,8 @@
 #include "MyProgramClass.h"
 #include "Helpers.h"
 
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
     LRESULT MyProgramClass::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
         switch (uMsg)
         {
@@ -11,7 +13,7 @@
             switch (wmId)
             {
             case IDM_ABOUT:
-                //DialogBox(hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hwnd, &About);
+                DialogBox(m_ins, MAKEINTRESOURCE(IDD_ABOUTBOX), m_hwnd, About);
                 break;
             case IDM_EXIT:
                 DestroyWindow(m_hwnd);
@@ -69,7 +71,7 @@
     }
 
     // Message handler for about box.
-    INT_PTR CALLBACK MyProgramClass::About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+    INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     {
         UNREFERENCED_PARAMETER(lParam);
         switch (message)

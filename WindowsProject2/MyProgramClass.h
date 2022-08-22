@@ -1,6 +1,9 @@
 #include "framework.h"
 #include "Resource.h"
 
+#define MAX_LOADSTRING 100
+
+
 template <class DERIVED_TYPE>
 class BaseWindow
 {
@@ -33,9 +36,30 @@ public:
 
     BaseWindow() : m_hwnd(NULL) { }
 
+    ATOM MyRegisterClass(HINSTANCE hInstance)
+    {
+        WNDCLASSEXW wcex;
+        WCHAR szWindowClass[MAX_LOADSTRING];
+        wcex.cbSize = sizeof(WNDCLASSEX);
+
+        wcex.style = CS_HREDRAW | CS_VREDRAW;
+        wcex.lpfnWndProc = DERIVED_TYPE::WindowProc;
+        wcex.cbClsExtra = 0;
+        wcex.cbWndExtra = 0;
+        wcex.hInstance = hInstance;
+        wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSPROJECT2));
+        wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOWSPROJECT2);
+        wcex.lpszClassName = ClassName();
+        wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
+        return RegisterClassExW(&wcex);
+    }
+
     BOOL Create(
         PCWSTR lpWindowName,
-        DWORD dwStyle,
+        DWORD dwStyle = CS_HREDRAW | CS_VREDRAW,
         DWORD dwExStyle = 0,
         int x = CW_USEDEFAULT,
         int y = CW_USEDEFAULT,
@@ -45,23 +69,21 @@ public:
         HMENU hMenu = 0
     )
     {
-        WNDCLASS wc = { 0 };
+       
+       HINSTANCE hInstance = GetModuleHandle(NULL);
+        
+       MyRegisterClass(hInstance);
 
-        wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
-        wc.hInstance = GetModuleHandle(NULL);
-        wc.lpszClassName = ClassName();
+       m_hwnd = CreateWindowW(ClassName(), lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, this);
 
-        RegisterClass(&wc);
-
-        m_hwnd = CreateWindowEx(
-            dwExStyle, ClassName(), lpWindowName, dwStyle, x, y,
-            nWidth, nHeight, hWndParent, hMenu, GetModuleHandle(NULL), this
-        );
+        m_ins = hInstance;
 
         return (m_hwnd ? TRUE : FALSE);
     }
 
-    HWND Window() const { return m_hwnd; }
+    HWND Window() const { 
+        return m_hwnd; 
+    }
 
 protected:
 
@@ -69,6 +91,7 @@ protected:
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
     HWND m_hwnd;
+    HINSTANCE m_ins;
 };
 
 class MyProgramClass : public BaseWindow<MyProgramClass>
@@ -76,5 +99,5 @@ class MyProgramClass : public BaseWindow<MyProgramClass>
 public:
     PCWSTR  ClassName() const { return L"Sample Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+    //INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 };
