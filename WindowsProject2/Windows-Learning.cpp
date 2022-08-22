@@ -20,11 +20,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     ShowWindow(myClass.Window(), nCmdShow);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWSPROJECT2));
-
+    HWND win = myClass.Window();
     MSG msg;
+    
     while (GetMessage(&msg, nullptr, 0, 0) > 0)
     {
-        if (!TranslateAccelerator(myClass.Window(), hAccelTable, &msg))
+        if (!TranslateAccelerator(win, hAccelTable, &msg))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
