@@ -85,6 +85,26 @@ public:
         return m_hwnd; 
     }
 
+    // Message handler for about box.
+    static INT_PTR CALLBACK s_DlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        UNREFERENCED_PARAMETER(lParam);
+        switch (message)
+        {
+        case WM_INITDIALOG:
+            return (INT_PTR)TRUE;
+
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+            {
+                EndDialog(hDlg, LOWORD(wParam));
+                return (INT_PTR)TRUE;
+            }
+            break;
+        }
+        return (INT_PTR)FALSE;
+    };
+
 protected:
 
     virtual PCWSTR  ClassName() const = 0;
@@ -99,5 +119,5 @@ class MyProgramClass : public BaseWindow<MyProgramClass>
 public:
     PCWSTR  ClassName() const { return L"Sample Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    //INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+    INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 };
